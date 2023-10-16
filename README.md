@@ -1,6 +1,6 @@
 # Aplicação Mobile com React Native - CRUD de Cadastro de Usuários
 
-![Inserir um GIF da aplicação aqui](inserir-link-do-gif-aqui)
+<img width="250" src="assets/gravacao.gif" />
 
 Uma aplicação móvel desenvolvida com React Native para criar, ler, atualizar e excluir (CRUD) registros de usuários. Esta aplicação demonstra a utilização das seguintes bibliotecas e tecnologias:
 
