@@ -9,6 +9,9 @@ const UserList = (props) => {
   const confirmUserDeletion = (user) => {
     Alert.alert('Excluir usuário', 'Deseja excluir o usuário?', [
       {
+        text: 'Não'
+      },
+      {
         text: 'Sim',
         onPress() {
           dispatch({
@@ -17,9 +20,6 @@ const UserList = (props) => {
           })
         }
       },
-      {
-        text: 'Não'
-      }
     ])
   }
 

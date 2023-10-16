@@ -14,6 +14,39 @@ const UserForms = ({ route, navigation }) => {
   const [isNameValid, setIsNameValid] = useState(true);
   const [isEmailValid, setIsEmailValid] = useState(true);
 
+  const validateEmail = () => {
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!regexEmail.test(email)) setIsEmailValid(false);
+    else setIsEmailValid(true);
+  };
+
+  const validateName = () => !name ? setIsNameValid(false) : setIsNameValid(true);
+
+  const validateAllInputs = () => {
+    if (!name || !email) {
+      validateName();
+      validateEmail();
+      return false;
+    }
+    return true;
+  }
+
+  const handlePressInputs = () => {
+    const returnValidations = validateAllInputs();
+    if (!returnValidations) return;
+    dispatch({
+      type: user.id ? 'updateUser' : 'createUser',
+      payload: user,
+    })
+    navigation.goBack()
+   }
+
+   const componentErrorMessage = (message) => (
+    <Text>
+      <Icon name="info" size={15} color="red" /> {message}
+    </Text>
+   )
+
   return (
     <View style={style.form}>
       <Input 
@@ -27,11 +60,7 @@ const UserForms = ({ route, navigation }) => {
         leftIcon={<Icon type='font-awesome' name="user" size={20} color="black" />}
         inputStyle={ { paddingStart: 10 } }
         errorMessage={ !isNameValid 
-          ? (
-            <Text>
-              <Icon name="info" size={15} color="red" /> O nome é obrigatório!
-            </Text>
-          )
+          ? componentErrorMessage('O nome é obrigatório!')
           : null
         }
         errorStyle={{ fontSize: 13 }}
@@ -47,11 +76,7 @@ const UserForms = ({ route, navigation }) => {
         leftIcon={<Icon name="email" size={20} color="black" />}
         inputStyle={ { paddingStart: 10 } }
         errorMessage={ !isEmailValid 
-          ? (
-            <Text>
-              <Icon name="info" size={15} color="red" /> E-mail inválido!
-            </Text>
-          )
+          ? componentErrorMessage('E-mail inválido!')
           : null
         }
         errorStyle={{ fontSize: 13 }}
@@ -69,17 +94,7 @@ const UserForms = ({ route, navigation }) => {
           onPress={() => {
             setUser({ ...user, avatarUrl: avatar.avatarUrl });
           }}
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed
-                ? 'rgb(210, 230, 255)'
-                : 'white'
-            },
-            {
-              borderRadius: 10,
-              padding: 10,
-            },
-          ]}
+          style={style.avatar}
           >
             <Image
               source={{ uri: avatar.avatarUrl }}
@@ -92,22 +107,7 @@ const UserForms = ({ route, navigation }) => {
 
       <Button 
         title='Salvar'
-        onPress={() => {
-          if (!name || !email) {
-            if (!name) {
-              setIsNameValid(false);
-            }
-            if (!email) {
-              setIsEmailValid(false);
-            }
-            return;
-          }
-          dispatch({
-            type: user.id ? 'updateUser' : 'createUser',
-            payload: user,
-          })
-          navigation.goBack()
-         } }
+        onPress={handlePressInputs}
       />
     </View>
   )
@@ -117,6 +117,17 @@ const style = StyleSheet.create({
   form: {
     padding: 12,
   },
+  avatar: ({ pressed }) => [
+    {
+      backgroundColor: pressed
+        ? 'rgb(210, 230, 255)'
+        : 'white'
+    },
+    {
+      borderRadius: 10,
+      padding: 10,
+    },
+  ],
 })
 
 export default UserForms
